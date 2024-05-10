@@ -13,48 +13,76 @@ import javax.swing.*;
  * @author Admin
  */
 public class MainMenu implements ActionListener{
-    private static JFrame mm;    
+    private static JFrame frame;    
     private static JLabel mainMenu;
-    private static JButton create;
-    private static JButton withDraw;
-    private static JButton deposit;
-    private static JPanel panel;
+    private static JButton withdraw, deposit, transac, pay, balance;
+    private static JPanel panel, title;
     
     MainMenu(){
         panel = new JPanel();
-        mm = new JFrame();
-        mm.setSize(420,420);
-        mm.setLocationRelativeTo(null);
-        mm.setLayout(new FlowLayout(FlowLayout.CENTER,0,100));
-        mm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mm.add(panel);
+        frame = new JFrame("BANK ACCOUNT MANAGEMENT");
+        frame.setSize(420,420);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
+        
+        
+        panel.setLayout(new GridLayout(5,1));
         panel.setPreferredSize(new Dimension(250,200));
-        panel.setLayout(new FlowLayout());
         //panel.setBackground(Color.red);
         
-        mainMenu = new JLabel("BANK ACCOUNT MANAGEMENT");
-        mainMenu.setFont(new Font("Arial", Font.BOLD, 14));
+        title = new JPanel(new BorderLayout());
+        //title.setPreferredSize(new Dimension(50,200));
+        
+        mainMenu = new JLabel("MAIN MENU", SwingConstants.CENTER);
+        mainMenu.setFont(new Font("Arial", Font.BOLD, 48));
         mainMenu.setBounds(10, 20, 250, 25);
-        panel.add(mainMenu);
+        title.add(mainMenu);
         
         
         
-        withDraw = new JButton ("Withdraw");
-        withDraw.setBounds(10, 150, 150, 25);
-        withDraw.addActionListener(this);
-        panel.add(withDraw);
+        withdraw = new JButton ("Withdraw");
+        withdraw.setFont(new Font("Arial", Font.BOLD, 24));
+        withdraw.setBounds(10, 150, 150, 25);
+        withdraw.addActionListener(this);
+        panel.add(withdraw);
         
         deposit = new JButton ("Deposit");
+        deposit.setFont(new Font("Arial", Font.BOLD, 24));
         deposit.setBounds(10, 200, 150, 25);
         deposit.addActionListener(this);
         panel.add(deposit);
         
-        mm.setVisible(true);
+        transac = new JButton ("Transactions");
+        transac.setFont(new Font("Arial", Font.BOLD, 24));
+        transac.setBounds(10, 200, 150, 25);
+        transac.addActionListener(this);
+        panel.add(transac);
+        
+        pay = new JButton ("Auto Payments");
+        pay.setFont(new Font("Arial", Font.BOLD, 24));
+        pay.setBounds(10, 200, 150, 25);
+        pay.addActionListener(this);
+        panel.add(pay);
+        
+        balance = new JButton ("Balances");
+        balance.setFont(new Font("Arial", Font.BOLD, 24));
+        balance.setBounds(10, 200, 150, 25);
+        balance.addActionListener(this);
+        panel.add(balance);
+        
+        frame.add(panel);
+        frame.add(title,BorderLayout.NORTH);
+        frame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+//        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+          if (e.getSource()==withdraw){
+            frame.dispose();
+            withdraw wd = new withdraw();
+        }
     }
 }
