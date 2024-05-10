@@ -12,27 +12,32 @@ import javax.swing.*;
  * @author Admin
  */
 public class createAcc implements ActionListener{
-    private static JLabel userLabel;
+    private static JLabel userLabel, pinLabel, success, reg;
     private static JTextField userField;
-    private static JLabel pinLabel;
     private static JPasswordField pinField;
-    private static JButton login;
-    private static JButton create;
-    private static JLabel success;
-    private static JPanel center;
+    private static JButton login, create;
+    private static JPanel center, title, south;
     private static JFrame frame;
     createAcc(){
         //frame
-        frame = new JFrame("REGISTER BANK ACCOUNTT");
+        frame = new JFrame("REGISTER BANK ACCOUNT");
         frame.setSize(420,420);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new FlowLayout(FlowLayout.CENTER,0,100));
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        title = new JPanel(new BorderLayout());
+        //title.setLayout(new FlowLayout());
+        
+        reg = new JLabel("REGISTER ACCOUNT:");
+        reg.setFont(new Font("Arial", Font.BOLD, 24));
+        title.add(reg);
         
         //center
         center = new JPanel();
         center.setPreferredSize(new Dimension(200,200));
-        center.setLayout(new FlowLayout());
+        center.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
         
         //user
         userLabel = new JLabel("Name:");
@@ -61,17 +66,27 @@ public class createAcc implements ActionListener{
         center.add(create);
         
         //shit
+        south = new JPanel(new BorderLayout());
+        south.setBackground(Color.yellow);
+        
         success = new JLabel("");
         success.setBounds(10, 150, 300, 25);
-        center.add(success);
+        south.add(success);
         
         //frame.add
+        frame.add(title, BorderLayout.NORTH);
         frame.add(center);
+        frame.add(south, BorderLayout.SOUTH);
         frame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String name = userField.getText();
+        String pass = pinField.getText();
+        
+        if(!name.isEmpty() && !pass.isEmpty()){
+            success.setText("TITI");
+        }
     }
 }
