@@ -14,32 +14,40 @@ import javax.swing.*;
  * @author Admin
  */
 public class LogIn implements ActionListener{
-    private static JLabel userLabel;
-    private static JTextField userField;
-    private static JLabel pinLabel;
-    private static JPasswordField pinField;
-    private static JButton login;
-    private static JButton create;
-    private static JLabel success;
-    private static JPanel center;
+    private static JPanel title, center;
     private static JFrame frame;
+    private static JLabel userLabel, bam, pinLabel, word;
+    private static JTextField userField;
+    private static JPasswordField pinField;
+    private static JButton login, create;
+   
     
     LogIn(){
         //frame
         frame = new JFrame("BANK ACCOUNT MANAGEMENT");
         frame.setSize(420,420);
+        frame.setResizable(false);
         frame.setLocationRelativeTo(null);
-        frame.setLayout(new FlowLayout(FlowLayout.CENTER,0,100));
+        frame.setLayout(new FlowLayout(FlowLayout.CENTER,0,10));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         //center
         center = new JPanel();
         center.setPreferredSize(new Dimension(200,200));
         center.setLayout(new FlowLayout());
+//        center.setBackground(Color.red);
+
+        title = new JPanel(new BorderLayout());
+        //title.setBackground(Color.blue);
         
+        bam = new JLabel("BANK ACCOUNT MANAGEMENT:");
+        bam.setFont(new Font("Arial", Font.BOLD, 24));
+        title.add(bam);
+
+         
         //pin
-        pinLabel = new JLabel("Pin:");
-        pinLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        pinLabel = new JLabel("PIN:");
+        pinLabel.setFont(new Font("Arial", Font.BOLD, 16));
         pinLabel.setBounds(10, 50, 80, 25);
         center.add(pinLabel);
         
@@ -58,12 +66,14 @@ public class LogIn implements ActionListener{
         create.addActionListener(this);
         center.add(create);
         
-        //shit
-        success = new JLabel("");
-        success.setBounds(10, 150, 300, 25);
-        center.add(success);
+        //word
+        word = new JLabel("");
+        word.setFont(new Font("Arial", Font.BOLD, 24));
+        word.setBounds(10, 150, 300, 25);
+        center.add(word);
         
         //frame.add
+        frame.add(bam, BorderLayout.NORTH);
         frame.add(center);
         frame.setVisible(true);
 
@@ -71,7 +81,7 @@ public class LogIn implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         String pass = pinField.getText();
-        if (pass.equals("cat")){
+        if (pass.equals("1")){
             if (e.getSource()==login){
                 frame.dispose();
                 MainMenu mm = new MainMenu();
@@ -83,51 +93,8 @@ public class LogIn implements ActionListener{
             createAcc ca = new createAcc();
         }
         else{
-            success.setText("Error");
-        }
-        
+            word.setText("Error");
+        }    
+    }
+    
 }
-}
-        
-        
-//        frame = new JFrame();
-//        center = new JPanel();
-//        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        
-//        
-//        center.setLayout(null);
-//        
-//        userLabel = new JLabel("User");
-//        userLabel.setBounds(10, 20, 80, 25);
-//        center.add(userLabel);
-//        
-//        userField = new JTextField(20);
-//        userField.setBounds(100, 20, 142, 25);
-//        center.add(userField);
-//        
-//        pinLabel = new JLabel("Password");
-//        pinLabel.setBounds(10, 50, 80, 25);
-//        center.add(pinLabel);
-//        
-//        pinField = new JPasswordField();
-//        pinField.setBounds(100, 50, 142, 25);
-//        center.add(pinField);
-//        
-//        login = new JButton ("Login");
-//        login.setBounds(10, 100, 80, 25);
-//        login.addActionListener(this);
-//        center.add(login);
-//        
-//        create = new JButton ("Create Account");
-//        create.setBounds(113, 100, 125, 25);
-//        create.addActionListener(this);
-//        center.add(create);
-//        
-//        success = new JLabel("");
-//        success.setBounds(10, 150, 300, 25);
-//        center.add(success);
-//        
-//        frame.add(center);
-//        frame.setSize(420,420);
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
