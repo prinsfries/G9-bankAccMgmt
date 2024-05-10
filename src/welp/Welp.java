@@ -4,24 +4,18 @@
  */
 package welp;
 
-import java.util.*;
-//import welp.Model;
 
 /**
  *
  * @author Admin
  */
-public class Welp {
-
+public class Welp{
     /**
      * @param args the command line arguments
      * @throws java.lang.InterruptedException
      */
-    public static void main(String[] args) throws InterruptedException {
-        // TODO code application logic here
-        Scanner scan = new Scanner(System.in);
-        System.out.println("Welcome to ATM \nInput your credit card pin to start.");
-        System.out.print("Pin: ");
-        int pin = scan.nextInt();
+    public static void main(String[] args){
+        LogIn login = new LogIn();
+        System.out.println("");
     }
 }
