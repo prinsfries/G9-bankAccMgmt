@@ -22,9 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 //import javax.swing.Container;
 
-public class Frame {
+public class deposit {
     
-    Frame(){
+    deposit(){
         
         JOptionPane.showMessageDialog(null, "Welcome to Deposit!", "Greeting",JOptionPane.PLAIN_MESSAGE);
    
