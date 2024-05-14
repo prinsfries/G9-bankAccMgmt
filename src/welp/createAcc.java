@@ -86,7 +86,7 @@ public class createAcc implements ActionListener{
         String pass = pinField.getText();
         
         if(!name.isEmpty() && !pass.isEmpty()){
-            success.setText("TITI");
+            success.setText("Account Created");
         }
     }
 }
