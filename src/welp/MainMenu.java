@@ -83,6 +83,22 @@ public class MainMenu implements ActionListener{
           if (e.getSource()==withdraw){
             frame.dispose();
             withdraw wd = new withdraw();
-        }
+            }
+          else if (e.getSource()==deposit){
+            frame.dispose();
+            deposit dp = new deposit();
+            }
+          else if (e.getSource()==transac){
+            frame.dispose();
+            accTransac at = new accTransac();
+            }
+          else if (e.getSource()==pay){
+            frame.dispose();
+            autoPay ap = new autoPay();
+            }
+          else if (e.getSource()==balance){
+            frame.dispose();
+            tracking t = new tracking();
+            }
     }
 }
