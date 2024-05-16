@@ -7,6 +7,7 @@ import javax.swing.border.*;
 public class withdraw {
     withdraw(){
         JFrame withDrawframe = new JFrame();
+        withDrawframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         withDrawframe.setTitle("IT Bank");
         withDrawframe.setSize(700,640);
         withDrawframe.setResizable(false);
