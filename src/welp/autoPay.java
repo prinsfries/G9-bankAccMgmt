@@ -57,4 +57,9 @@ public class autoPay extends JFrame {
        add(bry);
         setVisible(true);
     }
+public static void main(String[] args) {
+      
+               new autopay();
+    }
+    
 }
