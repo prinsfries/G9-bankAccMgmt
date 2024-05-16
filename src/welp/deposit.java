@@ -9,114 +9,127 @@ package welp;
  * @author Admin
  */
 
+package depositui;
+
 import java.awt.Color;
 import java.awt.Dimension;
-//import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-//import javax.swing.Container;
 
-public class deposit {
+
+public class Frame extends JFrame{
     
-    deposit(){
+    Frame(){
         
-        JOptionPane.showMessageDialog(null, "Welcome to Deposit!", "Greeting",JOptionPane.PLAIN_MESSAGE);
-   
-        JFrame frame = new JFrame();
-        frame.setTitle("BANK MANAGEMENT SYSTEM");
-        frame.setSize(700,500);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    //  frame.setLayout(new GridLayout(7,3,10,100));
-        frame.setLocationRelativeTo(null);
-      //  frame.getContentPane().setBackground(Color.RED);
-        frame.setLayout(null);
-      
+        ImageIcon iconic = new ImageIcon("capture.png");
+        JOptionPane.showMessageDialog(null, "Welcom to the Deposit System!", "WELCOME GREETING!",JOptionPane.INFORMATION_MESSAGE,iconic);
+    
+
+        JPanel jm = new JPanel();
         
-      JLabel mai = new JLabel("DEPOSIT");
-      mai.setBounds(150,40,300,100);
-      mai.setForeground(new Color(132,50,250));
-      mai.setFont(new Font("georgia",Font.BOLD,60));
+        jm.setBackground(new Color(0x123456));
+        jm.setLayout(new GridLayout(7,1,50,20));
+        jm.setBounds(70,150,600,400);
+        
+        JLabel jk = new JLabel("DEPOSIT");
+        jk.setBounds(100,10,200,150);
+        jk.setForeground(Color.white);
+        jk.setFont(new Font("Georgia",Font.BOLD,25));
+        
+        JLabel jn1 = new JLabel("UserID: ");
+        jn1.setForeground(Color.white);
+        jn1.setFont(new Font("Arial Black",Font.BOLD,15));
+        
+        JTextField yg1 = new JTextField();
+        JButton jh1 = new JButton("Search");
        
-    
-      JPanel pan = new JPanel();
-      pan.setLayout(new GridLayout(8,5));
-      pan.setSize(50,25);
-      pan.setBounds(200,120,500,600);
-    
-    
-        JLabel la2 = new JLabel("UserID:");
-        JLabel la3 = new JLabel("Name:");
-        JLabel la4 = new JLabel("Debit Account:");
-        JLabel la7 = new JLabel("Available Balance:");
-        JLabel la8 = new JLabel("Show");
-        la8.setForeground(new Color(0x123456));
-        JLabel la5 = new JLabel("Amount:");
-        JLabel la6 = new JLabel("Credit Account:"); 
+        JLabel jn2 = new JLabel("Name: ");
+        jn2.setForeground(Color.white);
+        jn2.setFont(new Font("Arial Black",Font.BOLD,15));
+        JTextField yg2 = new JTextField();
+        JButton jh2 = new JButton("Enter");
         
-        
-        JTextField text1 = new JTextField();
-     //   text1.setPreferredSize(new Dimension(5,0));
-        JTextField text2 = new JTextField();
-     //   text1.setPreferredSize(new Dimension(5,0));
-        JTextField text3 = new JTextField();
-        JTextField text4 = new JTextField();
-        JTextField text5 = new JTextField();
-        JTextField text6 = new JTextField();
-  
-        JButton b1 = new JButton("Search");
-      //  b1.setBackground(Color.gray);
-        JButton b2 = new JButton("Enter");
-      //  b2.setBackground(Color.gray);
-        JButton b3 = new JButton("Total");
-        JButton b4 = new JButton("Enter");
-        JButton b5 = new JButton("OK");
-        
-        
-        JButton b6 = new JButton("NEXT");
-         b6.setBounds(250,200,500,600);
-        JButton b7 = new JButton("EXIT");
-        
-    
-        // pan.add(la1);
-        
-        pan.add(la2);
-        pan.add(text1);
-        pan.add(b1);
-        
-        pan.add(la3);
-        pan.add(text2);
-        pan.add(b2);
-         
-        pan.add(la4);
-        pan.add(text3);
-        pan.add(la8);
-        
-        pan.add(la7);
-        pan.add(text6);
-        pan.add(b5);
-        
-        
-        pan.add(la5);
-        pan.add(text4);
-        pan.add(b3);
-         
-        pan.add(la6);
-        pan.add(text5);
-        pan.add(b4);
-        
-        pan.add(b7);
-        pan.add(b6);
-         
-         
-        frame.add(pan);
-        frame.add(mai);
+        JLabel jn3 = new JLabel("Debit Account: ");
+        jn3.setPreferredSize(new Dimension (100,50));
+        jn3.setForeground(Color.white);
+        jn3.setFont(new Font("Arial Black",Font.BOLD,15));  
+        JTextField yg3 = new JTextField();
        
+        JLabel nj3 = new JLabel("             Show       ");
+        nj3.setForeground(Color.white);
+        nj3.setFont(new Font("Arial Black",Font.BOLD,15));
+        
+        JLabel jn4 = new JLabel("Available Balance:");
+        jn4.setForeground(Color.white);
+        jn4.setFont(new Font("Arial Black",Font.BOLD,15));
+        JTextField yg4 = new JTextField();
+        JButton jh4 = new JButton("OK");
+        
+        JLabel jn5 = new JLabel("Amount");
+        jn5.setForeground(Color.white);
+        jn5.setFont(new Font("Arial Black",Font.BOLD,15));
+        JTextField yg5 = new JTextField();
+        JButton jh5 = new JButton("Enter");
+     
+        JLabel jn6 = new JLabel("Acredit Account:");
+        jn6.setForeground(Color.white);
+        jn6.setFont(new Font("Arial Black",Font.BOLD,15));
+        JTextField yg6 = new JTextField();
+        JButton jh6 = new JButton("Enter");
+        
+        JButton sty = new JButton("Exit");
+        sty.setBounds(100,510,100,20);
+        
+        JButton ytc = new JButton("Next");
+        ytc.setBounds(100,540,100,20);
+       
+        JFrame moon = new JFrame();
+        moon.setTitle("BANK ACCOUNT MANAGEMENT SYSTEM"); // title of frame
+        moon.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        moon.setResizable(false);
+        moon.setSize(750,650); // x and y dimension
+        moon.setLocationRelativeTo(null);
+        moon.getContentPane().setBackground(new Color(0x123456));
+    //  moon.setLayout(new GridLayout(7,1,100,150));       
+        moon.setLayout(null);  
+        moon.setVisible(true); // for frame visible
+        
+        jm.add(jn1);
+        jm.add(yg1);
+        jm.add(jh1);
+        
+        jm.add(jn2);
+        jm.add(yg2);
+        jm.add(jh2);
+        
+        jm.add(jn3);
+        jm.add(yg3);
+        jm.add(nj3);
+        
+        jm.add(jn4);
+        jm.add(yg4);
+        jm.add(jh4);
+        
+        jm.add(jn5);
+        jm.add(yg5);
+        jm.add(jh5);
+        
+        jm.add(jn6);
+        jm.add(yg6);
+        jm.add(jh6); 
+        moon.add(jm);
+        moon.add(jk);
+        moon.add(sty);
+        moon.add(ytc);
     }
+    
 }
+
+        
