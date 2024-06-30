@@ -1,28 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package welp;
 
 import java.awt.*;
-import java.awt.Color;
 import java.awt.event.*;
+import java.sql.*;
 import javax.swing.*;
 
-/**
- *
- * @author Admin
- */
+//Setting parameters
 public class LogIn implements ActionListener{
     private static JPanel title, center;
     private static JFrame frame;
-    private static JLabel userLabel, bam, pinLabel, word;
-    private static JTextField userField;
+    private static JLabel bam, pinLabel, word;
     private static JPasswordField pinField;
     private static JButton login, create;
    
     
     LogIn(){
+        init();
+    }
+    
+    //JFrame elements responsible for displaying the User Interface
+    private void init(){
+        
         //frame
         frame = new JFrame("BANK ACCOUNT MANAGEMENT");
         frame.setSize(420,420);
@@ -35,10 +33,8 @@ public class LogIn implements ActionListener{
         center = new JPanel();
         center.setPreferredSize(new Dimension(200,200));
         center.setLayout(new FlowLayout());
-//        center.setBackground(Color.red);
 
         title = new JPanel(new BorderLayout());
-        //title.setBackground(Color.blue);
         
         bam = new JLabel("BANK ACCOUNT MANAGEMENT:");
         bam.setFont(new Font("Arial", Font.BOLD, 24));
@@ -78,23 +74,48 @@ public class LogIn implements ActionListener{
         frame.setVisible(true);
 
     }
+    
+    //ActionEvent follows what course of action to do based on what the user has clicked
     @Override
     public void actionPerformed(ActionEvent e) {
         String pass = pinField.getText();
-        if (pass.equals("1")){
+            //if user has clicked Login
             if (e.getSource()==login){
-                frame.dispose();
-                MainMenu mm = new MainMenu();
-                
-            }
+                //JDBC connection to Database
+                Connection c;
+                try {
+                    c = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "");
+                    System.out.print("Connected: "); //System out for logs to see everytime it accesses the database
+                    Statement stmt = c.createStatement();
+                    
+                    //SQL Query that verifies the input from the pinField,
+                    String query = "SELECT * FROM bank WHERE user_Pin='"+pass+"'";
+                    ResultSet rs =stmt.executeQuery(query); 
+                    
+                    //if the input has been found in the database, it proceeds to the Main Menu
+                    if(rs.next()){
+                        System.out.println("Login Success");//System out for logs to see login success
+                        frame.dispose();
+                        new MainMenu();
+                    }
+                    //else if the inputted was not found, the system closes
+                    else{
+                        System.out.println("Login Error");//System out for logs to see login error
+                        word.setText("Error");
+                    }
+                } catch (Exception a) {
+                    System.out.println("Error");
+                }
         }
-        else if (e.getSource()==create){
+            
+            //else if the user has clicked Create
+            else if (e.getSource()==create){
             frame.dispose();
             createAcc ca = new createAcc();
         }
-        else{
+            
+            else{
             word.setText("Error");
         }    
     }
-    
 }
