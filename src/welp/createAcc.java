@@ -1,24 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package welp;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.*;
 import javax.swing.*;
-/**
- *
- * @author Admin
- */
+
+//Setting parameters
 public class createAcc implements ActionListener{
     private static JLabel userLabel, pinLabel, success, reg;
     private static JTextField userField;
     private static JPasswordField pinField;
-    private static JButton login, create;
-    private static JPanel center, title, south;
+    private static JButton create;
+    private static JPanel center, title;
     private static JFrame frame;
+    
     createAcc(){
+        init();
+    }
+    
+    //JFrame elements responsible for displaying the User Interface
+    private void init(){
+        
         //frame
         frame = new JFrame("REGISTER BANK ACCOUNT");
         frame.setSize(420,420);
@@ -28,7 +30,6 @@ public class createAcc implements ActionListener{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         title = new JPanel(new BorderLayout());
-        //title.setLayout(new FlowLayout());
         
         reg = new JLabel("REGISTER ACCOUNT:");
         reg.setFont(new Font("Arial", Font.BOLD, 24));
@@ -65,28 +66,51 @@ public class createAcc implements ActionListener{
         create.addActionListener(this);
         center.add(create);
         
-        //shit
-        south = new JPanel(new BorderLayout());
-        south.setBackground(Color.yellow);
-        
+        //indicator
         success = new JLabel("");
         success.setBounds(10, 150, 300, 25);
-        south.add(success);
         
         //frame.add
         frame.add(title, BorderLayout.NORTH);
         frame.add(center);
-        frame.add(south, BorderLayout.SOUTH);
+        frame.add(success);
         frame.setVisible(true);
-    }
+        }
 
+    //ActionEvent follows what course of action to do based on what the user has clicked
     @Override
     public void actionPerformed(ActionEvent e) {
+        //getting and setting input fields
         String name = userField.getText();
         String pass = pinField.getText();
         
+        
+        //if input fields are not empty
         if(!name.isEmpty() && !pass.isEmpty()){
-            success.setText("Account Created");
+            Connection c;
+                try 
+                {
+                    //JDBC connection to Database
+                    c = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "");
+                    System.out.print("Connected: "); //System out for logs to see everytime it accesses the database
+                    Statement stmt = c.createStatement();
+                    //query for insertion of new user
+                    String query = "INSERT INTO bank (user_names, user_Pin, bank_Amount) VALUES ('"+name+"','"+pass+"',0)";
+                    stmt.execute(query);
+                    success.setText("SUCCESS!");
+                    frame.dispose();
+                    new LogIn();
+                } 
+                catch (Exception a) 
+                {
+                    //System out for logs to see login error
+                    System.out.println("Error");
+                }
+        }
+        
+        //if input fields are empty
+        else{
+            success.setText("ERROR!");
         }
     }
 }
