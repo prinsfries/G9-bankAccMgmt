@@ -8,107 +8,177 @@ package welp;
  *
  * @author Admin
  */
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
 
-public class deposit extends JFrame{
+public class deposit extends JFrame implements ActionListener{
+       
+    private JButton rj = new JButton("Deposit Money"); //(Submit Botton)
+    private JButton jk1 = new JButton("Cancel"); //(Back Botton)
+    private JFrame frame; 
+    private JLabel dateTimeLabel; //setdate&time
+    private JTextField nj1; //get function 
+    private JTextField jh1; //jtextfield
+    private JTextField yg5; //jtextfield
+    
+    Frame(){
+       Lov();
+    }
+    
+        private void lov() {   //JFrame elements responsible for displaying the User Interface
+      
+       JOptionPane.showMessageDialog(null, "Welcome to the Deposit System!", "WELCOME GREETING!",JOptionPane.INFORMATION_MESSAGE);
+        //welcome message
+        
+       JPanel jn = new JPanel();       //main panel
+       jn.setLayout(new GridLayout(3,2,50,20));
+       jn.setBounds(60,120,600,150);
+    
+        JLabel sg = new JLabel("BANK DEPOSIT SYSTEM");  //titlepage
+        sg.setBounds(200,5,350,150);
+        sg.setForeground(Color.BLACK);
+        sg.setFont(new Font("Georgia",Font.BOLD,25));
+         
+        JLabel nj = new JLabel("Account Pin: ");     //information
+        nj.setForeground(Color.BLACK);
+        nj.setFont(new Font("Arial Black",Font.BOLD,15));
+          
+        nj1 = new JTextField();
+
+        JLabel jh = new JLabel("Account Name: ");    //information
+        jh.setForeground(Color.BLACK);
+        jh.setFont(new Font("Arial Black",Font.BOLD,15));
+         
+        jh1 = new JTextField(); 
+         
+        JLabel jk = new JLabel("Deposit Amount:");    //information
+        jk.setForeground(Color.BLACK);
+        jk.setFont(new Font("Arial Black",Font.BOLD,15));
+         
+        yg5 = new JTextField();
+          
+       JLabel t = new JLabel("Date:");                    //dateinfo
+       t.setForeground(Color.BLACK);
+       t.setFont(new Font("Arial Black",Font.BOLD,15));
+       t.setBounds(60,230,500,150);
+  
+       dateTimeLabel = new JLabel("Date & Time");
+       dateTimeLabel.setFont(new Font("New Times Roman", Font.BOLD, 15));
+       dateTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+       dateTimeLabel.setBounds(260,230,500,150);
+          
+       updateDateTime();  //updatetime during run
+        
+       jk1.setBounds(50, 340, 150, 30);  //botton cancel
+       jk1.addActionListener(this);  
+              
+       rj.setBounds(550,15,150,28);  ////botton submit
+       rj.addActionListener(this);
+
+       setTitle("BANK MANAGEMENT SYSTEM");
+       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       setResizable(false);
+       setSize(740,440);
+       // setSize(740, 700);
+       setLocationRelativeTo(null);
+       setLayout(null);
+       setVisible(true);
+           
+       add(jn);
+       jn.add(nj);
+       jn.add(nj1);
  
-    deposit(){
-        JOptionPane.showMessageDialog(null, "Welcom to the Deposit System!", "WELCOME GREETING!",JOptionPane.INFORMATION_MESSAGE);
-        JPanel jm = new JPanel();
+       jn.add(jh);
+       jn.add(jh1);
+      
+       jn.add(jk);
+       jn.add(yg5);
 
-        jm.setBackground(new Color(0x123456));
-        jm.setLayout(new GridLayout(7,1,50,20));
-        jm.setBounds(70,150,600,400);
+       add(jk1);
+       add(rj);
+       add(sg);
+       add(t);
+       add(dateTimeLabel);
+    
+   }        
+      private void updateDateTime() {    //to set date&time
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      String currentTime = sdf.format(new Date());
+      dateTimeLabel.setText(currentTime);
+    }
 
-        JLabel jk = new JLabel("DEPOSIT");
-        jk.setBounds(100,10,200,150);
-        jk.setForeground(Color.white);
-        jk.setFont(new Font("Georgia",Font.BOLD,25));
-
-        JLabel jn1 = new JLabel("UserID: ");
-        jn1.setForeground(Color.white);
-        jn1.setFont(new Font("Arial Black",Font.BOLD,15));
-
-        JTextField yg1 = new JTextField();
-        JButton jh1 = new JButton("Search");
-
-        JLabel jn2 = new JLabel("Name: ");
-        jn2.setForeground(Color.white);
-        jn2.setFont(new Font("Arial Black",Font.BOLD,15));
-        JTextField yg2 = new JTextField();
-        JButton jh2 = new JButton("Enter");
-
-        JLabel jn3 = new JLabel("Debit Account: ");
-        jn3.setPreferredSize(new Dimension (100,50));
-        jn3.setForeground(Color.white);
-        jn3.setFont(new Font("Arial Black",Font.BOLD,15));  
-        JTextField yg3 = new JTextField();
-
-        JLabel nj3 = new JLabel("             Show       ");
-        nj3.setForeground(Color.white);
-        nj3.setFont(new Font("Arial Black",Font.BOLD,15));
-
-        JLabel jn4 = new JLabel("Available Balance:");
-        jn4.setForeground(Color.white);
-        jn4.setFont(new Font("Arial Black",Font.BOLD,15));
-        JTextField yg4 = new JTextField();
-        JButton jh4 = new JButton("OK");
-
-        JLabel jn5 = new JLabel("Amount");
-        jn5.setForeground(Color.white);
-        jn5.setFont(new Font("Arial Black",Font.BOLD,15));
-        JTextField yg5 = new JTextField();
-        JButton jh5 = new JButton("Enter");
-
-        JLabel jn6 = new JLabel("Acredit Account:");
-        jn6.setForeground(Color.white);
-        jn6.setFont(new Font("Arial Black",Font.BOLD,15));
-        JTextField yg6 = new JTextField();
-        JButton jh6 = new JButton("Enter");
-
-        JButton sty = new JButton("Exit");
-        sty.setBounds(100,510,100,20);
-
-        JButton ytc = new JButton("Next");
-        ytc.setBounds(100,540,100,20);
-
-        JFrame moon = new JFrame();
-        moon.setTitle("BANK ACCOUNT MANAGEMENT SYSTEM"); // title of frame
-        moon.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        moon.setResizable(false);
-        moon.setSize(750,650);
-        moon.setLocationRelativeTo(null);
-        moon.getContentPane().setBackground(new Color(0x123456));   
-        moon.setLayout(null);  
-        moon.setVisible(true);
-
-        jm.add(jn1);
-        jm.add(yg1);
-        jm.add(jh1);
-
-        jm.add(jn2);
-        jm.add(yg2);
-        jm.add(jh2);
-
-        jm.add(jn3);
-        jm.add(yg3);
-        jm.add(nj3);
-
-        jm.add(jn4);
-        jm.add(yg4);
-        jm.add(jh4);
-
-        jm.add(jn5);
-        jm.add(yg5);
-        jm.add(jh5);
-
-        jm.add(jn6);
-        jm.add(yg6);
-        jm.add(jh6); 
-        moon.add(jm);
-        moon.add(jk);
-        moon.add(sty);
-        moon.add(ytc);
+      public static void main(String[] args) {
+      SwingUtilities.invokeLater(Frame::new);
+    }    
+    
+    @Override
+      public void actionPerformed(ActionEvent e) {
+      if (e.getSource() == jk1) {   //cancel botton
+         dispose(); 
+     } else if (e.getSource() == rj) {   //submit botton
+            
+            //Retrieve data from text fields    
+       String accountPin = nj1.getText();
+       String accountName = jh1.getText();
+       String depositAmount = yg5.getText();
+        
+        //JDBC connection to Database
+       String dbURL = "jdbc:mysql://localhost:3306/test";
+       String username = "root";
+       String password = "";
+       Connection c = null;
+       
+         
+       try {
+          Class.forName("com.mysql.cj.jdbc.Driver");  
+          c=DriverManager.getConnection(dbURL, username, password);
+            if (c != null) {
+            System.out.println("Connected");
+             }
+            System.out.print(c);
+         
+           String sql = "INSERT INTO deposit (Account_pin, Account_name, Deposit_amount) VALUES (?, ?, ?)";
+                   PreparedStatement now = c.prepareStatement(sql);  //prepared statement
+                   now.setString(1, accountName);
+                   now.setString(2, accountPin);
+                   now.setString(3, depositAmount);
+                   now.executeUpdate();
+                   JOptionPane.showMessageDialog(null, "Sucessful Inserted The Data!");
+  
+           dispose();   
+      
+        } catch (ClassNotFoundException ex) {
+           // Logger.getLogger(JavaMySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Connection Error!");
+        } catch (SQLException ex) {
+          //  Logger.getLogger(JavaMySQLConnect.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Unsuccessful Inserting Data!");
+        }  finally {
+                if (c != null) {
+                    try {
+                        c.close();
+                    } catch (SQLException ex) {
+                       // Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
     }
 }
