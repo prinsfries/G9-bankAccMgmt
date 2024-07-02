@@ -86,6 +86,7 @@ public class LogIn implements ActionListener{
                 try {
                     c = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "");
                     System.out.print("Connected: "); //System out for logs to see everytime it accesses the database
+                    System.out.println(c);
                     Statement stmt = c.createStatement();
                     
                     //SQL Query that verifies the input from the pinField,
@@ -95,8 +96,14 @@ public class LogIn implements ActionListener{
                     //if the input has been found in the database, it proceeds to the Main Menu
                     if(rs.next()){
                         System.out.println("Login Success");//System out for logs to see login success
+                        String un = rs.getString("user_names");
+                        String pin = rs.getString("user_Pin");
+                        int money = rs.getInt("bank_Amount");
+                        System.out.println(un);
+                        System.out.println(pin);
+                        System.out.println(money);
                         frame.dispose();
-                        new MainMenu();
+                        new MainMenu(un, pin, money);
                     }
                     //else if the inputted was not found, the system closes
                     else{
