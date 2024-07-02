@@ -1,5 +1,4 @@
 package welp;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -19,17 +18,19 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.BevelBorder;
 
-public class Withdraw1 extends JFrame implements ActionListener {
+public class withdraw extends JFrame implements ActionListener {
 
     private JButton onek, fivek, tenk, fiftink, withdrawbutton, backbutton;
     private JTextField textfield2;
     private JPanel rightpanel;
     private JLabel label1, label2, dateLabel; 
     private int balance; 
-    
+    private String p;
+
     private Connection c;
 
-    Withdraw1() {
+    withdraw(String p) {
+        this.p=p;
         setTitle("IT Bank");
         setSize(700, 640);
         setLayout(null);
@@ -43,7 +44,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
         onek.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         onek.addActionListener(this);
         add(onek);
-        
+
         fivek = new JButton("5000");
         fivek.setBounds(50, 200, 190, 50);
         fivek.setBackground(Color.LIGHT_GRAY);
@@ -51,7 +52,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
         fivek.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         fivek.addActionListener(this);
         add(fivek);
-        
+
         tenk = new JButton("10,000");
         tenk.setBounds(50, 300, 190, 50);
         tenk.setBackground(Color.LIGHT_GRAY);
@@ -59,7 +60,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
         tenk.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         tenk.addActionListener(this);
         add(tenk);
-        
+
         fiftink = new JButton("20,000");
         fiftink.setBounds(50, 400, 190, 50);
         fiftink.setBackground(Color.LIGHT_GRAY);
@@ -67,7 +68,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
         fiftink.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
         fiftink.addActionListener(this);
         add(fiftink);
-        
+
         backbutton = new JButton("BACK");
         backbutton.setBounds(50, 500, 100, 50);
         backbutton.setBackground(Color.LIGHT_GRAY);
@@ -102,7 +103,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
         label2.setForeground(Color.BLACK);
         add(label2);
 
-       
+
         dateLabel = new JLabel();
         dateLabel.setBounds(500, 30, 200, 30);
         dateLabel.setFont(new Font(dateLabel.getFont().getName(), Font.PLAIN, 18));
@@ -114,9 +115,11 @@ public class Withdraw1 extends JFrame implements ActionListener {
         rightpanel.setBackground(Color.GRAY);
         rightpanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
         add(rightpanel);
+        
+        setVisible(true);
 
         try {
-            c = DriverManager.getConnection("jdbc:mysql://localhost:3307/withdraw", "root", "12345678");
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "");
             System.out.println("Successfully connected to database");
             throwbalance();
             Date();
@@ -148,8 +151,8 @@ public class Withdraw1 extends JFrame implements ActionListener {
             }
         } else if (source == backbutton) {
             JOptionPane.showMessageDialog(null, "Back to the previous page"); // connect mo dito yung previous page
-            
-            
+
+
         }
     }
 
@@ -169,12 +172,12 @@ public class Withdraw1 extends JFrame implements ActionListener {
     }
 
     private void throwbalance() {
-        String query = "SELECT balance FROM accounts WHERE id = 1"; // DITO NAKADEPENDE YUNG ID number
+        String query = "SELECT bank_Amount FROM bank WHERE user_Pin ='"+p+"'"; // DITO NAKADEPENDE YUNG ID number
         try {
             PreparedStatement preparedStatement = c.prepareStatement(query);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                balance = resultSet.getInt("balance");
+                balance = resultSet.getInt("bank_Amount");
                 System.out.println("Current Balance: " + balance);
             }
         } catch (SQLException e) {
@@ -184,7 +187,7 @@ public class Withdraw1 extends JFrame implements ActionListener {
     }
 
     private void updatebalance(int newBalance) throws SQLException { // nagaupdte ng balance sa database
-        String updateQuery = "UPDATE accounts SET balance = ? WHERE id = 1";
+        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_Pin ='"+p+"'";
         PreparedStatement preparedStatement = c.prepareStatement(updateQuery);
         preparedStatement.setInt(1, newBalance);
         preparedStatement.executeUpdate();
