@@ -1,4 +1,3 @@
-
 package welp;
 import javax.swing.*;
 import java.awt.*;
@@ -21,14 +20,15 @@ public class autoPay extends JFrame {
         JPanel bry = new JPanel();
         bry.setLayout(new GridLayout(5, 2));
 
-        JLabel cardNumber = new JLabel("Card Number:");
+        JLabel cardNumber = new JLabel("User Name:");
         cardNumber1 = new JTextField();
-        JLabel expirationDate = new JLabel("Expiration Date:");
+        JLabel expirationDate = new JLabel("Pin:");
         expirationDate2 = new JTextField();
-        JLabel postalCode = new JLabel("Billing Postal Code:");
-        postalCode3 = new JTextField();
-        JLabel securityCode = new JLabel("Security Code:");
-        securityCode4 = new JTextField();
+        JLabel postalCode = new JLabel("Date:");
+        postalCode3 = new JTextField("YYYY-MM-DD");
+        JLabel securityCode = new JLabel("Transaction Details:");
+        securityCode4 = new JTextField("AutoPay");
+        securityCode4.setEditable(false);
 
         JButton process = new JButton("Process Payment");
 
@@ -41,7 +41,6 @@ public class autoPay extends JFrame {
         bry.add(securityCode);
         bry.add(securityCode4);
         bry.add(process);
-
         process.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,12 +50,12 @@ public class autoPay extends JFrame {
                 String securityCode = securityCode4.getText();
 
                 // Database connection variables
-                String url = "jdbc:mysql://localhost:3306/AutoPayment"; // Update with  database URL
-                String user = "bryan"; // Update with the database username
-                String password = "caballero"; // Update with the database password
+                String url = "jdbc:mysql://localhost:3306/bank"; // Update with  database URL
+                String user = "root"; // Update with the database username
+                String password = ""; // Update with the database password
 
                 // Insert data into the database
-                String query = "INSERT INTO payments (card_number, expiration_date, postal_code, security_code) VALUES (?, ?, ?, ?)";
+                String query = "INSERT INTO bank (user_names, user_Pin, transaction_date, transaction_details) VALUES (?, ?, ?, ?)";
 
                 try (Connection conn = DriverManager.getConnection(url, user, password);
                      PreparedStatement ps = conn.prepareStatement(query)) {
