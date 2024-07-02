@@ -154,14 +154,15 @@ public class deposit extends JFrame implements ActionListener{
              }
             System.out.print(c);
          
-           String sql = "INSERT INTO deposit (Account_pin, Account_name, Deposit_amount) VALUES (?, ?, ?)";
-                   PreparedStatement now = c.prepareStatement(sql);  //prepared statement
-                   now.setString(1, accountName);
-                   now.setString(2, accountPin);
-                   now.setString(3, depositAmount);
-                   now.executeUpdate();
-                   JOptionPane.showMessageDialog(null, "Sucessful Inserted The Data!");
-  
+          String sql = "UPDATE deposit SET Account_name = ?, Deposit_amount = ? WHERE Account_pin = ?";
+                    PreparedStatement now = c.prepareStatement(sql);
+                    now.setString(1, accountName); // Set the account name
+                    now.setString(2, depositAmount); // Set the deposit amount
+                    now.setString(3, accountPin); // Set the account pin
+                    now.executeUpdate();
+                    
+                JOptionPane.showMessageDialog(null, "SuccessFul Updating the Data!");
+        
            dispose();   
       
         } catch (ClassNotFoundException ex) {
