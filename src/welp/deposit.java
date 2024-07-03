@@ -150,7 +150,7 @@ public class deposit extends JFrame implements ActionListener {
                 PreparedStatement nowInsert = c.prepareStatement(sqlInsert);
                 nowInsert.setString(1, accountName);
                 nowInsert.setString(2, accountPin);
-                nowInsert.setString(3, "Deposit");
+                nowInsert.setString(3, "Deposited "+amount);
                 nowInsert.setString(4, date);
                 nowInsert.executeUpdate();
 
