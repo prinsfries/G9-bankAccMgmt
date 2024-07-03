@@ -110,7 +110,7 @@ public class MainMenu implements ActionListener{
             }
           else if (e.getSource()==transac){
             frame.dispose();
-            accTransac at = new accTransac();
+            accTransac at = new accTransac(u);
             }
           else if (e.getSource()==pay){
             frame.dispose();
