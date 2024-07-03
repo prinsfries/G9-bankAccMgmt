@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package welp;
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +11,13 @@ public class accTransac extends JFrame {
     private JTextArea textArea;
 
     // database connection details
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/accounttrans";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/bank";
     private static final String USER = "root";
     private static final String PASS = "";
+    private String u;
 
-    public accTransac() {
+    public accTransac(String u) {
+        this.u=u;
         transactions = new ArrayList<>();
         fetchTransactionsFromDatabase();
 
@@ -47,54 +45,41 @@ public class accTransac extends JFrame {
         setVisible(true);
     }
 
-  
+
     private void fetchTransactionsFromDatabase() {     // catch transactions from the database 
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT date, amount FROM transactions")) {
+             ResultSet rs = stmt.executeQuery("SELECT * FROM transaction_log WHERE user_names='"+u+"'")) {
             while (rs.next()) {
-                String date = rs.getString("date");
-                double amount = rs.getDouble("amount");
-                transactions.add(new Transaction(date, amount));
+                String date = rs.getString("transaction_date");
+                String details = rs.getString("transaction_details");
+                transactions.add(new Transaction(date, details));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    
+
     private void showTransactions() {      // display the transactions in the text area
         StringBuilder sb = new StringBuilder();
         for (Transaction transaction : transactions) {
-            sb.append("Date: ").append(transaction.getDate()).append("\tAmount: ").append(transaction.getAmount()).append("\n");
+            sb.append("Date: ").append(transaction.getDate()).append("\tDetails: ").append(transaction.getDetails()).append("\n");
         }
         textArea.setText(sb.toString());
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new AccountTransactionViewer();
-            }
-        });
     }
-}
-
-class Transaction {
+    class Transaction {
     private String date;
-    private double amount;
-
-    public Transaction(String date, double amount) {
+    private String details;
+    public Transaction(String date, String details) {
         this.date = date;
-        this.amount = amount;
+        this.details = details;
     }
-
     public String getDate() {
         return date;
     }
-
-    public double getAmount() {
-        return amount;
+    public String getDetails() {
+        return details;
     }
 }
