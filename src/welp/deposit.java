@@ -1,176 +1,223 @@
 package welp;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate; 
+import java.time.LocalDateTime;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.BevelBorder;
 
-import java.awt.*;
-import java.util.Date;
-import javax.swing.*;
-import java.awt.event.*;
-import java.sql.*;
-import java.text.SimpleDateFormat;
+public class withdraw extends JFrame implements ActionListener {
 
-public class deposit extends JFrame implements ActionListener {
+    private JButton onek, fivek, tenk, fiftink, withdrawbutton, backbutton;
+    private JTextField textfield2;
+    private JPanel rightpanel;
+    private JLabel label1, label2, dateLabel; 
+    private int balance; 
+    private String p;
 
-    private JButton rj = new JButton("Deposit Money"); //(Submit Button)
-    private JButton jk1 = new JButton("Cancel"); //(Back Button)
-    private JFrame frame;
-    private JLabel dateTimeLabel; //set date&time
-    private JTextField nj1; //get function 
-    private JTextField jh1; //jtextfield
-    private JTextField yg5; //jtextfield
-    private int m;
+    private Connection c;
 
-    deposit(String u, String p, int m) {
-        this.m = m;
-        lov(u, p, m);
-    }
-
-    private void lov(String u, String p, int m) {   //JFrame elements responsible for displaying the User Interface
-        System.out.println("deposit");
-        System.out.println(u);
-        System.out.println(p);
-        System.out.println(m);
-        JOptionPane.showMessageDialog(null, "Welcome to the Deposit System!", "WELCOME GREETING!", JOptionPane.INFORMATION_MESSAGE);
-        //welcome message
-
-        JPanel jn = new JPanel();       //main panel
-        jn.setLayout(new GridLayout(3, 2, 50, 20));
-        jn.setBounds(60, 120, 600, 150);
-
-        JLabel sg = new JLabel("BANK DEPOSIT SYSTEM");  //title page
-        sg.setBounds(200, 5, 350, 150);
-        sg.setForeground(Color.BLACK);
-        sg.setFont(new Font("Georgia", Font.BOLD, 25));
-
-        JLabel nj = new JLabel("Account Pin: ");     //information
-        nj.setForeground(Color.BLACK);
-        nj.setFont(new Font("Arial Black", Font.BOLD, 15));
-
-        nj1 = new JTextField(p);
-        JLabel jh = new JLabel("Account Name: ");    //Name
-        jh.setForeground(Color.BLACK);
-        jh.setFont(new Font("Arial Black", Font.BOLD, 15));
-
-        jh1 = new JTextField(u);
-
-        JLabel jk = new JLabel("Deposit Amount:");    //Deposit
-        jk.setForeground(Color.BLACK);
-        jk.setFont(new Font("Arial Black", Font.BOLD, 15));
-
-        yg5 = new JTextField();
-
-        JLabel t = new JLabel("Date:");                    //Date
-        t.setForeground(Color.BLACK);
-        t.setFont(new Font("Arial Black", Font.BOLD, 15));
-        t.setBounds(60, 230, 500, 150);
-
-        dateTimeLabel = new JLabel("Date & Time");
-        dateTimeLabel.setFont(new Font("New Times Roman", Font.BOLD, 15));
-        dateTimeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        dateTimeLabel.setBounds(260, 230, 500, 150);
-
-        updateDateTime();  //updatetime
-
-        jk1.setBounds(50, 340, 150, 30);  //cancel button 
-        jk1.addActionListener(this);
-
-        rj.setBounds(550, 15, 150, 28);  ////submit button 
-        rj.addActionListener(this);
-        setTitle("BANK MANAGEMENT SYSTEM");
+    withdraw(String p) {
+        this.p=p;
+        setTitle("IT Bank");
+        setSize(700, 640);
+        setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setSize(740, 440);
-        // setSize(740, 700);
-        setLocationRelativeTo(null);
-        setLayout(null);
+
+        onek = new JButton("1000");
+        onek.setBounds(50, 100, 190, 50);
+        onek.setBackground(Color.LIGHT_GRAY);
+        onek.setFont(new Font("Georgia", Font.PLAIN, 30));
+        onek.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        onek.addActionListener(this);
+        add(onek);
+
+        fivek = new JButton("5000");
+        fivek.setBounds(50, 200, 190, 50);
+        fivek.setBackground(Color.LIGHT_GRAY);
+        fivek.setFont(new Font("Georgia", Font.PLAIN, 30));
+        fivek.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        fivek.addActionListener(this);
+        add(fivek);
+
+        tenk = new JButton("10,000");
+        tenk.setBounds(50, 300, 190, 50);
+        tenk.setBackground(Color.LIGHT_GRAY);
+        tenk.setFont(new Font("Georgia", Font.PLAIN, 30));
+        tenk.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        tenk.addActionListener(this);
+        add(tenk);
+
+        fiftink = new JButton("20,000");
+        fiftink.setBounds(50, 400, 190, 50);
+        fiftink.setBackground(Color.LIGHT_GRAY);
+        fiftink.setFont(new Font("Georgia", Font.PLAIN, 30));
+        fiftink.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        fiftink.addActionListener(this);
+        add(fiftink);
+
+        backbutton = new JButton("BACK");
+        backbutton.setBounds(50, 500, 100, 50);
+        backbutton.setBackground(Color.LIGHT_GRAY);
+        backbutton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        backbutton.addActionListener(this);
+        add(backbutton);
+
+        textfield2 = new JTextField();
+        textfield2.setBounds(380, 200, 230, 50);
+        textfield2.setBackground(Color.LIGHT_GRAY);
+        textfield2.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        textfield2.setFont(new Font(textfield2.getFont().getName(), Font.PLAIN, 25));
+        add(textfield2);
+
+        withdrawbutton = new JButton("WITHDRAW");
+        withdrawbutton.setBounds(480, 500, 130, 50);
+        withdrawbutton.setBackground(Color.GREEN);
+        withdrawbutton.setFont(new Font("Georgia", Font.PLAIN, 15));
+        withdrawbutton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        withdrawbutton.addActionListener(this);
+        add(withdrawbutton);
+
+        label1 = new JLabel("SELECT AMOUNT");
+        label1.setBounds(60, 30, 200, 30);
+        label1.setFont(new Font(label1.getFont().getName(), Font.PLAIN, 20));
+        label1.setForeground(Color.WHITE);
+        add(label1);
+
+        label2 = new JLabel("OTHER AMOUNT");
+        label2.setBounds(420, 150, 200, 30);
+        label2.setFont(new Font(label1.getFont().getName(), Font.PLAIN, 20));
+        label2.setForeground(Color.BLACK);
+        add(label2);
+
+
+        dateLabel = new JLabel();
+        dateLabel.setBounds(500, 30, 200, 30);
+        dateLabel.setFont(new Font(dateLabel.getFont().getName(), Font.PLAIN, 18));
+        dateLabel.setForeground(Color.BLACK);
+        add(dateLabel);
+
+        rightpanel = new JPanel();
+        rightpanel.setBounds(0, 0, 300, 640);
+        rightpanel.setBackground(Color.GRAY);
+        rightpanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
+        add(rightpanel);
+        
         setVisible(true);
 
-        add(jn);
-        jn.add(nj);
-        jn.add(nj1);
-
-        jn.add(jh);
-        jn.add(jh1);
-
-        jn.add(jk);
-        jn.add(yg5);
-        add(jk1);
-        add(rj);
-        add(sg);
-        add(t);
-        add(dateTimeLabel);
-
-    }
-
-    private void updateDateTime() {    //to set date&time
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String currentTime = sdf.format(new Date());
-        dateTimeLabel.setText(currentTime);
-    }
-
-    public static void main(String[] args) {
+        try {
+            c = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "");
+            System.out.println("Successfully connected to database");
+            throwbalance();
+            Date();
+        } catch (SQLException e) {
+            System.out.println("failed to connect to the database");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == jk1) {   //cancel button
-            dispose();
-        } else if (e.getSource() == rj) {   //submit button
+        Object source = e.getSource();
 
-            //Retrieve data from text fields    
-            String accountPin = nj1.getText();
-            String accountName = jh1.getText();
-            String depositAmount = yg5.getText();
-            String date = dateTimeLabel.getText();
-            int amount = Integer.parseInt(depositAmount);
-            int deposit = m + amount;
-            String depositS = Integer.toString(deposit);
-
-            //JDBC connection to Database
-            String dbURL = "jdbc:mysql://localhost:3306/bank";
-            String username = "root";
-            String password = "";
-            Connection c = null;
-
+        if (source == onek) {
+            withdrawsystem(1000);
+        } else if (source == fivek) {
+            withdrawsystem(5000);
+        } else if (source == tenk) {
+            withdrawsystem(10000);
+        } else if (source == fiftink) {
+            withdrawsystem(20000);
+        } else if (source == withdrawbutton) {
+            String amountText = textfield2.getText();
             try {
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                c = DriverManager.getConnection(dbURL, username, password);
-                if (c != null) {
-                    System.out.println("Connected");
-                }
-                System.out.print(c);
-
-                //Deposit bank amount
-                String sqlUpdate = "UPDATE bank SET bank_Amount= ? WHERE user_Pin= ?";
-                PreparedStatement nowUpdate = c.prepareStatement(sqlUpdate);
-                nowUpdate.setString(1, depositS); // Set the deposit amount
-                nowUpdate.setString(2, accountPin); // Set the account pin
-                nowUpdate.executeUpdate();
-
-                //Insert transaction log
-                String sqlInsert = "INSERT INTO transaction_log (user_names, user_Pin, transaction_details, transaction_date) VALUES (?, ?, ?, ?)";
-                PreparedStatement nowInsert = c.prepareStatement(sqlInsert);
-                nowInsert.setString(1, accountName);
-                nowInsert.setString(2, accountPin);
-                nowInsert.setString(3, "Deposited "+amount);
-                nowInsert.setString(4, date);
-                nowInsert.executeUpdate();
-
-                JOptionPane.showMessageDialog(null, "Successfully Deposited!");
-
-                dispose();
-
-            } catch (ClassNotFoundException ex) {
-                JOptionPane.showMessageDialog(null, "Connection Error!");
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Unsuccessful Deposit!");
-                ex.printStackTrace(); // debug
-            } finally {
-                if (c != null) {
-                    try {
-                        c.close();
-                    } catch (SQLException ex) {
-                    }
-                }
+                int amount = Integer.parseInt(amountText);
+                withdrawsystem(amount);
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
             }
+        } else if (source == backbutton) {
+            JOptionPane.showMessageDialog(null, "Back to the previous page"); // connect mo dito yung previous page
+
+
         }
+    }
+
+    private void withdrawsystem(int amount) { // eto yung withdraw
+        try {
+            if (amount <= balance) {
+                balance -= amount;
+                updatebalance(balance);
+                logTransaction(amount);
+                JOptionPane.showMessageDialog(null, "Withdrawal successful. \nNew Balance: " + balance);
+            } else {
+                JOptionPane.showMessageDialog(null, "Insufficient funds.");
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error: Unable to perform transaction.");
+            e.printStackTrace();
+        }
+    }
+
+    private void throwbalance() {
+        String query = "SELECT bank_Amount FROM bank WHERE user_Pin ='"+p+"'"; // DITO NAKADEPENDE YUNG ID number
+        try {
+            PreparedStatement preparedStatement = c.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                balance = resultSet.getInt("bank_Amount");
+                System.out.println("Current Balance: " + balance);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error");
+            e.printStackTrace();
+        }
+    }
+
+    private void updatebalance(int newBalance) throws SQLException { // nagaupdte ng balance sa database
+        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_Pin ='"+p+"'";
+        PreparedStatement preparedStatement = c.prepareStatement(updateQuery);
+        preparedStatement.setInt(1, newBalance);
+        preparedStatement.executeUpdate();
+    }
+    private void logTransaction(int amount) throws SQLException {
+        String logQuery = "INSERT INTO transaction_log (user_names, user_Pin, transaction_details, transaction_date) VALUES (?, ?, ?, ?)";
+        PreparedStatement logStatement = c.prepareStatement(logQuery);
+        LocalDateTime currentDate = LocalDateTime.now();
+        String transactionDate = currentDate.toString();
+
+        //Kunin yung name ng user
+        String userNameQuery = "SELECT user_names FROM bank WHERE user_Pin = ?";
+        PreparedStatement userNameStatement = c.prepareStatement(userNameQuery);
+        userNameStatement.setString(1, p);
+        ResultSet userNameResult = userNameStatement.executeQuery();
+        String userName = "";
+        if (userNameResult.next()) {
+            userName = userNameResult.getString("user_names");
+        }
+
+        logStatement.setString(1, userName);
+        logStatement.setString(2, p);
+        logStatement.setString(3, "Withdrawn " + amount);   //lalagay sa transaction_log
+        logStatement.setString(4, transactionDate);
+        logStatement.executeUpdate();
+    }
+    private void Date() {
+        LocalDate currentDate = LocalDate.now();
+        dateLabel.setText("Date: " + currentDate.toString());
     }
 }
