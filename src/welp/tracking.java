@@ -1,105 +1,137 @@
 package tracking;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
+import java.sql.*;
+import javax.swing.table.DefaultTableModel;
 
 public class tracking {
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/tracking";
+    private static final String USER = "root";
+    private static final String PASS = "";
+
     public static void main(String[] args) {
         JFrame frame = new JFrame();
-        frame.setTitle("Account Balance");
+        frame.setTitle("Bank Account Tracker");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1100, 900);
+        frame.setSize(600, 500);
         frame.setResizable(false);
         frame.getContentPane().setBackground(new Color(0xFFFFFF));
-        frame.setLayout(null); 
-        
-        JLabel labels = new JLabel("Bank Account Tracker");
-        labels.setBounds(450, 20, 200, 50);
-        labels.setForeground(Color.BLACK);
-        labels.setVerticalAlignment(JLabel.TOP);
-        labels.setHorizontalAlignment(JLabel.CENTER);
-        labels.setFont(new Font("Times New Roman", Font.BOLD, 20));
-        
-        JButton button1 = new JButton("Close");
-        button1.setBounds(200, 780, 100, 50);
-        button1.setFocusable(false);
-        button1.setFont(new Font("Serif", Font.BOLD, 14));
-        button1.setBackground(Color.LIGHT_GRAY);
-        button1.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JButton button2 = new JButton("Print");
-        button2.setBounds(740, 780, 100, 50);
-        button2.setFocusable(false);
-        button2.setFont(new Font("Serif", Font.BOLD, 14));
-        button2.setBackground(Color.LIGHT_GRAY);
-        button2.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JTextField textfield1 = new JTextField();
-        textfield1.setBounds(210, 120, 400, 50);
-        
-        JButton button3 = new JButton("Date");
-        button3.setBounds(100, 120, 100, 50);
-        button3.setFocusable(false);
-        button3.setFont(new Font("Serif", Font.BOLD, 14));
-        button3.setBackground(Color.LIGHT_GRAY);
-        button3.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JTextField textfield2 = new JTextField();
-        textfield2.setBounds(210, 250, 400, 50);
-        
-        JButton button4 = new JButton("Amount");
-        button4.setBounds(100, 250, 100, 50);
-        button4.setFocusable(false);
-        button4.setFont(new Font("Serif", Font.BOLD, 14));
-        button4.setBackground(Color.LIGHT_GRAY);
-        button4.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JTextField textfield3 = new JTextField();
-        textfield3.setBounds(210, 380, 400, 50);
-        
-        JButton button5 = new JButton("Withdrawal");
-        button5.setBounds(100, 380, 100, 50);
-        button5.setFocusable(false);
-        button5.setFont(new Font("Serif", Font.BOLD, 14));
-        button5.setBackground(Color.LIGHT_GRAY);
-        button5.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JTextField textfield4 = new JTextField();
-        textfield4.setBounds(210, 510, 400, 50);
-        
-        JButton button6 = new JButton("Deposit");
-        button6.setBounds(100, 510, 100, 50);
-        button6.setFocusable(false);
-        button6.setFont(new Font("Serif", Font.BOLD, 14));
-        button6.setBackground(Color.LIGHT_GRAY);
-        button6.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        JTextField textfield5 = new JTextField();
-        textfield5.setBounds(210, 640, 400, 50);
-        
-        JButton button7 = new JButton("Balance");
-        button7.setBounds(100, 640, 100, 50);
-        button7.setFocusable(false);
-        button7.setFont(new Font("Serif", Font.BOLD, 14));
-        button7.setBackground(Color.LIGHT_GRAY);
-        button7.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        
-        
-        frame.add(labels);
-        frame.add(button1);
-        frame.add(button2);
-        frame.add(textfield1);
-        frame.add(textfield2);
-        frame.add(textfield3);
-        frame.add(textfield4);
-        frame.add(textfield5);
-        frame.add(button3);
-        frame.add(button4);
-        frame.add(button5);
-        frame.add(button6);
-        frame.add(button7);
-        
-        frame.setVisible(true); 
+        frame.setLayout(null);
+                //Labels
+        JLabel titleLabel = new JLabel("Bank Account Tracker");
+        titleLabel.setBounds(200, 20, 200, 50);
+        titleLabel.setForeground(Color.BLACK);
+        titleLabel.setVerticalAlignment(JLabel.TOP);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setFont(new Font("Times New Roman", Font.BOLD, 20));
+            //Buttons
+        JButton closeButton = new JButton("Close");
+        closeButton.setBounds(150, 400, 100, 50);
+        closeButton.setFocusable(false);
+        closeButton.setFont(new Font("Serif", Font.BOLD, 14));
+        closeButton.setBackground(Color.LIGHT_GRAY);
+        closeButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.dispose(); 
+            }
+        });
+                //Buttons for continue to fetchData
+        JButton continueButton = new JButton("Continue");
+        continueButton.setBounds(350, 400, 100, 50);
+        continueButton.setFocusable(false);
+        continueButton.setFont(new Font("Serif", Font.BOLD, 14));
+        continueButton.setBackground(Color.LIGHT_GRAY);
+        continueButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+        continueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                fetchData();
+            }
+        });
+                //Labels
+        JLabel dateLabel = new JLabel("Date:");
+        dateLabel.setBounds(50, 100, 150, 50);
+        dateLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        dateLabel.setBackground(Color.LIGHT_GRAY);
+        dateLabel.setOpaque(true);
+        dateLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        dateLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+        JTextField dateTextField = new JTextField();
+        dateTextField.setBounds(250, 100, 300, 50);
+
+        JLabel amountLabel = new JLabel("Amount:");
+        amountLabel.setBounds(50, 200, 150, 50);
+        amountLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        amountLabel.setBackground(Color.LIGHT_GRAY);
+        amountLabel.setOpaque(true);
+        amountLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        amountLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+        JTextField amountTextField = new JTextField();
+        amountTextField.setBounds(250, 200, 300, 50);
+
+        JLabel balanceLabel = new JLabel("Balance:");
+        balanceLabel.setBounds(50, 300, 150, 50);
+        balanceLabel.setFont(new Font("Serif", Font.BOLD, 14));
+        balanceLabel.setBackground(Color.LIGHT_GRAY);
+        balanceLabel.setOpaque(true);
+        balanceLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        balanceLabel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+
+        JTextField balanceTextField = new JTextField();
+        balanceTextField.setBounds(250, 300, 300, 50);
+
+        frame.add(titleLabel);
+        frame.add(closeButton);
+        frame.add(continueButton);
+        frame.add(dateLabel);
+        frame.add(dateTextField);
+        frame.add(amountLabel);
+        frame.add(amountTextField);
+        frame.add(balanceLabel);
+        frame.add(balanceTextField);
+
+        frame.setVisible(true);
+    }
+
+    private static void fetchData() {
+        JFrame dataFrame = new JFrame();
+        dataFrame.setTitle("Fetched Data");
+        dataFrame.setSize(600, 400);
+        dataFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dataFrame.setLayout(new BorderLayout());
+
+        String[] columnNames = {"Date", "Amount", "Balance"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+
+        dataFrame.add(scrollPane, BorderLayout.CENTER);
+
+        // Fetch data from the database
+        try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
+            String query = "SELECT date, amount, balance FROM account_transactions";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                String date = rs.getString("date");
+                String amount = rs.getString("amount");
+                String balance = rs.getString("balance");
+                tableModel.addRow(new Object[]{date, amount, balance});
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error fetching data from database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        dataFrame.setVisible(true);
     }
 }
