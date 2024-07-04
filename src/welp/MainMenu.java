@@ -118,7 +118,7 @@ public class MainMenu implements ActionListener{
             }
           else if (e.getSource()==balance){
             frame.dispose();
-            tracking t = new tracking();
+            new tracking(u);
             }
           else if (e.getSource()==transfer){
             frame.dispose();
