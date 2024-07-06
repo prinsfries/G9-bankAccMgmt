@@ -1,4 +1,5 @@
 package welp;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate; 
+import java.time.LocalDateTime;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,13 +26,17 @@ public class withdraw extends JFrame implements ActionListener {
     private JTextField textfield2;
     private JPanel rightpanel;
     private JLabel label1, label2, dateLabel; 
-    private int balance; 
-    private String p;
-
+    private int balance, m; 
+    private String u, p, n;
     private Connection c;
 
-    withdraw(String p) {
-        this.p=p;
+    withdraw(String un, String pin, String an, int money) {
+        this.u = un; 
+        this.p = pin;
+        this.m = money; 
+        this.n = an; 
+        
+        //jframe
         setTitle("IT Bank");
         setSize(700, 640);
         setLayout(null);
@@ -103,7 +109,6 @@ public class withdraw extends JFrame implements ActionListener {
         label2.setForeground(Color.BLACK);
         add(label2);
 
-
         dateLabel = new JLabel();
         dateLabel.setBounds(500, 30, 200, 30);
         dateLabel.setFont(new Font(dateLabel.getFont().getName(), Font.PLAIN, 18));
@@ -124,7 +129,7 @@ public class withdraw extends JFrame implements ActionListener {
             throwbalance();
             Date();
         } catch (SQLException e) {
-            System.out.println("failed to connect to the database");
+            System.out.println("Failed to connect to the database");
             e.printStackTrace();
         }
     }
@@ -150,17 +155,17 @@ public class withdraw extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Please enter a valid amount.");
             }
         } else if (source == backbutton) {
-            JOptionPane.showMessageDialog(null, "Back to the previous page"); // connect mo dito yung previous page
-
-
+            this.dispose();
+            new MainMenu(u, p, n, balance);
         }
     }
 
-    private void withdrawsystem(int amount) { // eto yung withdraw
+    private void withdrawsystem(int amount) {
         try {
             if (amount <= balance) {
                 balance -= amount;
                 updatebalance(balance);
+                logTransaction(amount);
                 JOptionPane.showMessageDialog(null, "Withdrawal successful. \nNew Balance: " + balance);
             } else {
                 JOptionPane.showMessageDialog(null, "Insufficient funds.");
@@ -171,10 +176,11 @@ public class withdraw extends JFrame implements ActionListener {
         }
     }
 
-    private void throwbalance() {
-        String query = "SELECT bank_Amount FROM bank WHERE user_Pin ='"+p+"'"; // DITO NAKADEPENDE YUNG ID number
+    private void throwbalance() {//kuha balance
+        String query = "SELECT bank_Amount FROM bank WHERE user_Pin = ?";
         try {
             PreparedStatement preparedStatement = c.prepareStatement(query);
+            preparedStatement.setString(1, p);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 balance = resultSet.getInt("bank_Amount");
@@ -186,11 +192,34 @@ public class withdraw extends JFrame implements ActionListener {
         }
     }
 
-    private void updatebalance(int newBalance) throws SQLException { // nagaupdte ng balance sa database
-        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_Pin ='"+p+"'";
+    private void updatebalance(int newBalance) throws SQLException {// nagaupdte ng balance sa database
+        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_Pin = ?";
         PreparedStatement preparedStatement = c.prepareStatement(updateQuery);
         preparedStatement.setInt(1, newBalance);
+        preparedStatement.setString(2, p);
         preparedStatement.executeUpdate();
+    }
+
+    private void logTransaction(int amount) throws SQLException {
+        String logQuery = "INSERT INTO transaction_log (user_names, user_Pin, transaction_details, transaction_date) VALUES (?, ?, ?, ?)";
+        PreparedStatement logStatement = c.prepareStatement(logQuery);
+        LocalDateTime currentDate = LocalDateTime.now();
+        String transactionDate = currentDate.toString();
+
+        String userNameQuery = "SELECT user_names FROM bank WHERE user_Pin = ?";
+        PreparedStatement userNameStatement = c.prepareStatement(userNameQuery);
+        userNameStatement.setString(1, p);
+        ResultSet userNameResult = userNameStatement.executeQuery();
+        String userName = "";
+        if (userNameResult.next()) {
+            userName = userNameResult.getString("user_names");
+        }
+
+        logStatement.setString(1, userName);
+        logStatement.setString(2, p);
+        logStatement.setString(3, "Withdrawn " + amount);
+        logStatement.setString(4, transactionDate);
+        logStatement.executeUpdate();
     }
 
     private void Date() {
