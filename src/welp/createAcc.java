@@ -3,6 +3,7 @@ package welp;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import javax.swing.*;
 
 //Setting parameters
@@ -10,7 +11,7 @@ public class createAcc implements ActionListener{
     private static JLabel userLabel, pinLabel, success, reg;
     private static JTextField userField;
     private static JPasswordField pinField;
-    private static JButton create;
+    private static JButton create, cancel;
     private static JPanel center, title;
     private static JFrame frame;
     
@@ -66,6 +67,11 @@ public class createAcc implements ActionListener{
         create.addActionListener(this);
         center.add(create);
         
+        cancel = new JButton ("Cancel");
+        cancel.setBounds(113, 100, 125, 25);
+        cancel.addActionListener(this);
+        center.add(cancel);
+        
         //indicator
         success = new JLabel("");
         success.setBounds(10, 150, 300, 25);
@@ -80,11 +86,15 @@ public class createAcc implements ActionListener{
     //ActionEvent follows what course of action to do based on what the user has clicked
     @Override
     public void actionPerformed(ActionEvent e) {
+        
         //getting and setting input fields
         String name = userField.getText();
         String pass = pinField.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("MMddyyHHmmss");
+        String currentTime = sdf.format(new java.util.Date());
+        String date = currentTime;
         
-        
+        if(e.getSource()==create){
         //if input fields are not empty
         if(!name.isEmpty() && !pass.isEmpty()){
             Connection c;
@@ -95,22 +105,27 @@ public class createAcc implements ActionListener{
                     System.out.print("Connected: "); //System out for logs to see everytime it accesses the database
                     Statement stmt = c.createStatement();
                     //query for insertion of new user
-                    String query = "INSERT INTO bank (user_names, user_Pin, bank_Amount) VALUES ('"+name+"','"+pass+"',0)";
+                    String query = "INSERT INTO bank (user_names, user_Pin, user_num, bank_Amount) VALUES ('"+name+"','"+pass+"','"+date+"',0)";
                     stmt.execute(query);
-                    success.setText("SUCCESS!");
+                    JOptionPane.showMessageDialog(null, "Successfully Created!\nYour account number: "+date);
+                    System.out.println("Acc Num: "+date);//debug purposes
                     frame.dispose();
                     new LogIn();
                 } 
                 catch (Exception a) 
                 {
-                    //System out for logs to see login error
+                    //System out for logs, jdbc error
                     System.out.println("Error");
                 }
         }
-        
-        //if input fields are empty
-        else{
-            success.setText("ERROR!");
+            //if input fields are empty
+            else{
+                JOptionPane.showMessageDialog(null, "Unsuccessful!\nFill in all the text fields!");
+            }
+        }
+        else if (e.getSource()==cancel){
+            frame.dispose();
+            new LogIn();
         }
     }
 }
