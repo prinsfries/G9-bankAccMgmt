@@ -6,18 +6,23 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class accTransac extends JFrame {
+public class accTransac extends JFrame implements ActionListener{
     private List<Transaction> transactions;
     private JTextArea textArea;
+    private JButton viewButton, back;
 
     // database connection details
     private static final String DB_URL = "jdbc:mysql://localhost:3306/bank";
     private static final String USER = "root";
     private static final String PASS = "";
-    private String u;
+    private int m; 
+    private String u, p, n;
 
-    public accTransac(String u) {
-        this.u=u;
+    public accTransac(String u, String p, String n, int m) {
+        this.m = m;
+        this.u = u;
+        this.p = p;
+        this.n = n;
         transactions = new ArrayList<>();
         fetchTransactionsFromDatabase();
 
@@ -32,14 +37,14 @@ public class accTransac extends JFrame {
         add(new JScrollPane(textArea), BorderLayout.CENTER);
 
         // Button to view transactions
-        JButton viewButton = new JButton("View Transactions");
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showTransactions();
-            }
-        });
-        add(viewButton, BorderLayout.SOUTH);
+        viewButton = new JButton("View Transactions");
+        viewButton.addActionListener(this);
+        add(viewButton, BorderLayout.NORTH);
+        
+        // Button to view go back to mainmenu
+        back = new JButton("Back");
+        back.addActionListener(this);
+        add(back, BorderLayout.SOUTH);
 
         setLocationRelativeTo(null);
         setVisible(true);
@@ -67,6 +72,17 @@ public class accTransac extends JFrame {
             sb.append("Date: ").append(transaction.getDate()).append("\tDetails: ").append(transaction.getDetails()).append("\n");
         }
         textArea.setText(sb.toString());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {// go back
+        if(e.getSource()==viewButton){
+            showTransactions();
+        }
+        else if(e.getSource()==back){
+            dispose();
+            new MainMenu(u,p,n,m);
+        }
     }
     }
     class Transaction {
