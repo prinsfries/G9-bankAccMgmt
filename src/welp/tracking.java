@@ -1,23 +1,30 @@
 package welp;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDateTime;
 import javax.swing.table.DefaultTableModel;
 
-public class tracking {
+public class tracking implements ActionListener {
     private static final String DB_URL = "jdbc:mysql://localhost:3306/bank";
     private static final String USER = "root";
     private static final String PASS = "";
-    private static String u;
+    private int m;
+    private String u, p, n;
+    private JFrame dataFrame;
 
-    tracking(String u) {
-        this.u=u;
-        fetchData();
+    tracking(String u, String p, String n, int m) {
+        this.u = u;
+        this.m = m;
+        this.p = p;
+        this.n = n;
+        fetchData(u, p, n, m);
     }
 
-    private static void fetchData() {
-        JFrame dataFrame = new JFrame();
+    private void fetchData(String u, String p, String n, int m) {
+        dataFrame = new JFrame();
         dataFrame.setTitle("Fetched Data");
         dataFrame.setSize(600, 400);
         dataFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -30,11 +37,16 @@ public class tracking {
 
         dataFrame.add(scrollPane, BorderLayout.CENTER);
 
+        JButton backButton = new JButton("Back");
+        backButton.addActionListener(this);
+        dataFrame.add(backButton, BorderLayout.SOUTH);
+
         // Fetch data from the database
         try (Connection conn = DriverManager.getConnection(DB_URL, USER, PASS)) {
-            String query = "SELECT bank_Amount, user_names FROM bank WHERE user_names='"+u+"'";
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+            String query = "SELECT bank_Amount, user_names FROM bank WHERE user_names=?";
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, u);
+            ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
                 LocalDateTime date = LocalDateTime.now();
@@ -48,5 +60,11 @@ public class tracking {
         }
 
         dataFrame.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        dataFrame.dispose();
+        new MainMenu(u, p, n, m);
     }
 }
