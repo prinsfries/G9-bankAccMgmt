@@ -11,13 +11,19 @@ public class transfer implements ActionListener {
     private static JFrame frame;
     private static JLabel title, name1, name2, pin1, pin2, amount;
     private static JTextField one, two, pinField1, pinField2, amountf;
-    private static JButton transfer;
+    private static JButton transfer, back;
+    private int m; 
+    private String u, p, n;
     
-    transfer() {
-        init();
+    transfer(String u, String p, String n, int m) {
+        init(u,p,n,m);
     }
     
-    void init() {
+    void init(String u, String p, String n, int m) {
+        this.m = m;
+        this.u = u;
+        this.p = p;
+        this.n = n;
         // frame
         frame = new JFrame("BANK ACCOUNT MANAGEMENT");
         frame.setSize(420, 420);
@@ -35,9 +41,10 @@ public class transfer implements ActionListener {
         name1.setBounds(20, -120, 420, 420);
         frame.add(name1);
         
-        one = new JTextField();
+        one = new JTextField(n);
         one.setFont(new Font("Arial", Font.PLAIN, 16));
         one.setBounds(20, 120, 125, 30);
+        one.setEditable(false);
         frame.add(one);
         
         pin1 = new JLabel("Pin:");
@@ -46,9 +53,10 @@ public class transfer implements ActionListener {
         pin1.setBounds(20, -30, 420, 420);
         frame.add(pin1);
         
-        pinField1 = new JTextField();
+        pinField1 = new JTextField(p);
         pinField1.setFont(new Font("Arial", Font.PLAIN, 16));
         pinField1.setBounds(20, 200, 125, 30);
+        pinField1.setEditable(false);
         frame.add(pinField1);
         
         name2 = new JLabel("User 2");
@@ -91,6 +99,12 @@ public class transfer implements ActionListener {
         transfer.addActionListener(this);
         frame.add(transfer);
         
+        //back button
+        back = new JButton("Back");
+        back.setBounds(5, 340, 125, 30);
+        back.addActionListener(this);
+        frame.add(back);
+        
         //frame 
         frame.setVisible(true);
         frame.setResizable(false);
@@ -100,14 +114,15 @@ public class transfer implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        String u1 = one.getText();
-        String u2 = two.getText();
-        String p1 = pinField1.getText();
-        String p2 = pinField2.getText();
-        String monkey = amountf.getText();
-        int money = Integer.parseInt(monkey);
         
+        // if transfer is clicked
         if (e.getSource() == transfer) {
+            String u1 = one.getText();
+            String u2 = two.getText();
+            String p1 = pinField1.getText();
+            String p2 = pinField2.getText();
+            String monkey = amountf.getText();
+            int money = Integer.parseInt(monkey);
             Connection c = null;
             PreparedStatement pstmt = null;
             ResultSet rs = null;
@@ -117,7 +132,7 @@ public class transfer implements ActionListener {
                 c.setAutoCommit(false); // Disable auto-commit for transaction
                 
                 //verify user 1
-                String validateUser1 = "SELECT * FROM bank WHERE user_names=? AND user_Pin=?";
+                String validateUser1 = "SELECT * FROM bank WHERE user_num=? AND user_Pin=?";
                 pstmt = c.prepareStatement(validateUser1);
                 pstmt.setString(1, u1);
                 pstmt.setString(2, p1);
@@ -129,9 +144,10 @@ public class transfer implements ActionListener {
                 }
                 
                 int balance1 = rs.getInt("bank_Amount");
+                String name1 = rs.getString("user_names");
                 
                 //verify user 2
-                String validateUser2 = "SELECT * FROM bank WHERE user_names=? AND user_Pin=?";
+                String validateUser2 = "SELECT * FROM bank WHERE user_num=? AND user_Pin=?";
                 pstmt = c.prepareStatement(validateUser2);
                 pstmt.setString(1, u2);
                 pstmt.setString(2, p2);
@@ -143,6 +159,7 @@ public class transfer implements ActionListener {
                 }
                 
                 int balance2 = rs.getInt("bank_Amount");
+                String name2 = rs.getString("user_names");
                 
                 //check if afford ba ni user 1
                 if (balance1 < money) {
@@ -151,15 +168,15 @@ public class transfer implements ActionListener {
                 }
                 
                 //user 1 bawas
-                String updateUser1 = "UPDATE bank SET bank_Amount=? WHERE user_names=? AND user_Pin=?";
+                String updateUser1 = "UPDATE bank SET bank_Amount=? WHERE user_num=? AND user_Pin=?";
                 pstmt = c.prepareStatement(updateUser1);
                 pstmt.setInt(1, balance1 - money);
                 pstmt.setString(2, u1);
                 pstmt.setString(3, p1);
                 pstmt.executeUpdate();
                 
-                //user 2 receive
-                String updateUser2 = "UPDATE bank SET bank_Amount=? WHERE user_names=? AND user_Pin=?";
+                //user 2 risib
+                String updateUser2 = "UPDATE bank SET bank_Amount=? WHERE user_num=? AND user_Pin=?";
                 pstmt = c.prepareStatement(updateUser2);
                 pstmt.setInt(1, balance2 + money);
                 pstmt.setString(2, u2);
@@ -173,27 +190,29 @@ public class transfer implements ActionListener {
                 String date = sdf.format(new Date());
                 
                 //transaction log of user 1
-                nowInsert.setString(1, u1);
+                nowInsert.setString(1, name1);
                 nowInsert.setString(2, p1);
-                nowInsert.setString(3, "Transferred " + money + " to " + u2);
+                nowInsert.setString(3, "Transferred " + money + " to " + name2); // use name2 instead of u2
                 nowInsert.setString(4, date);
                 nowInsert.executeUpdate();
                 
                 //transaction log of user 2
-                nowInsert.setString(1, u2);
+                nowInsert.setString(1, name2);
                 nowInsert.setString(2, p2);
-                nowInsert.setString(3, "Received " + money + " from " + u1);
+                nowInsert.setString(3, "Received " + money + " from " + name1); // use name1 instead of u1
                 nowInsert.setString(4, date);
                 nowInsert.executeUpdate();
                 
                 //Commit 
                 c.commit();
+                frame.dispose();
                 JOptionPane.showMessageDialog(frame, "Transfer successful");
+                new MainMenu(u,p,n,m);
                 
             } catch (SQLException ex) {
                 if (c != null) {
                     try {
-                        c.rollback(); // Rollback transaction on error
+                        c.rollback(); // Rollback pag error
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
@@ -223,6 +242,12 @@ public class transfer implements ActionListener {
                     }
                 }
             }
+        }
+        
+        //if back
+        else if(e.getSource()==back){
+            frame.dispose();
+            new MainMenu(u,p,n,m);
         }
     }
 }
