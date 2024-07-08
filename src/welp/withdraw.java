@@ -193,10 +193,10 @@ public class withdraw extends JFrame implements ActionListener {
     }
 
     private void updatebalance(int newBalance) throws SQLException {// nagaupdte ng balance sa database
-        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_Pin = ?";
+        String updateQuery = "UPDATE bank SET bank_Amount=? WHERE user_num = ?";
         PreparedStatement preparedStatement = c.prepareStatement(updateQuery);
         preparedStatement.setInt(1, newBalance);
-        preparedStatement.setString(2, p);
+        preparedStatement.setString(2, n);
         preparedStatement.executeUpdate();
     }
 
