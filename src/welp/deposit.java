@@ -19,21 +19,47 @@ public class deposit extends JFrame implements ActionListener {
     private int m;
     private String u, p, n;
 
-    deposit(String u, String p, String n, int m) {
-        this.m = m;
+    deposit(String u, String p, String n) {
         this.u = u;
         this.p = p;
         this.n = n;
+        this.m = fetchCurrentBalance(n);//get latest balance from the database
         lov(u, p, n, m);
     }
 
+    private int fetchCurrentBalance(String accountNumber) {
+        int balance = 0;
+        String dbURL = "jdbc:mysql://localhost:3306/bank";
+        String username = "root";
+        String password = "";
+        Connection c = null;
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            c = DriverManager.getConnection(dbURL, username, password);
+            String query = "SELECT bank_Amount FROM bank WHERE user_num=?";
+            PreparedStatement ps = c.prepareStatement(query);
+            ps.setString(1, accountNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                balance = rs.getInt("bank_Amount");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return balance;
+    }
+
     private void lov(String u, String p, String n, int m) {   //JFrame elements responsible for displaying the User Interface
-        System.out.println("deposit");
-        System.out.println(u);
-        System.out.println(p);
-        System.out.println(m);
+        System.out.println("Current Balance: " + m);
         JOptionPane.showMessageDialog(null, "Welcome to the Deposit System!", "WELCOME GREETING!", JOptionPane.INFORMATION_MESSAGE);
-        //welcome message
 
         JPanel jn = new JPanel();       //main panel
         jn.setLayout(new GridLayout(3, 2, 50, 20));
@@ -85,7 +111,6 @@ public class deposit extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(740, 440);
-        // setSize(740, 700);
         setLocationRelativeTo(null);
         setLayout(null);
         setVisible(true);
@@ -112,14 +137,11 @@ public class deposit extends JFrame implements ActionListener {
         dateTimeLabel.setText(currentTime);
     }
 
-    public static void main(String[] args) {
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == jk1) {   //cancel button
             dispose();
-            new MainMenu(u, p, n, m);
+            new MainMenu(u, p, n, fetchCurrentBalance(n)); // Fetch updated balance
         } else if (e.getSource() == rj) {   //submit button
             //Retrieve data from text fields    
             String depositAmount = yg5.getText();
@@ -132,7 +154,8 @@ public class deposit extends JFrame implements ActionListener {
             }
 
             String date = dateTimeLabel.getText();
-            int deposit = m + amount;
+            int currentBalance = fetchCurrentBalance(n);
+            int newBalance = currentBalance + amount;
 
             //JDBC connection to Database
             String dbURL = "jdbc:mysql://localhost:3306/bank";
@@ -148,10 +171,10 @@ public class deposit extends JFrame implements ActionListener {
                 }
 
                 //Deposit bank amount
-                String sqlUpdate = "UPDATE bank SET bank_Amount= ? WHERE user_Pin= ?";
+                String sqlUpdate = "UPDATE bank SET bank_Amount= ? WHERE user_num= ?";
                 PreparedStatement nowUpdate = c.prepareStatement(sqlUpdate);
-                nowUpdate.setInt(1, deposit); // Set the deposit amount
-                nowUpdate.setString(2, p); // Set the account pin
+                nowUpdate.setInt(1, newBalance); //Set the new balance
+                nowUpdate.setString(2, n); //Set the account num
                 nowUpdate.executeUpdate();
 
                 //Insert transaction log
@@ -166,7 +189,7 @@ public class deposit extends JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Successfully Deposited!");
 
                 dispose();
-                new MainMenu(u, p, n, deposit); // Pass updated balance to MainMenu
+                new MainMenu(u, p, n, newBalance); //Pass updated balance to MainMenu
 
             } catch (ClassNotFoundException ex) {
                 JOptionPane.showMessageDialog(null, "Connection Error!");
