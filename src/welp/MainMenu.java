@@ -102,7 +102,7 @@ public class MainMenu implements ActionListener{
             }
           else if (e.getSource()==deposit){
             frame.dispose();
-            deposit dp = new deposit(u,p,n,m);
+            deposit dp = new deposit(u,p,n);
             }
           else if (e.getSource()==transac){
             frame.dispose();
