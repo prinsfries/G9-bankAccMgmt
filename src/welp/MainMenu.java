@@ -71,7 +71,7 @@ public class MainMenu implements ActionListener{
         transfer.addActionListener(this);
         panel.add(transfer);
         
-        balance = new JButton ("Balances");
+        balance = new JButton ("Balance");
         balance.setFont(new Font("Arial", Font.BOLD, 24));
         balance.setBounds(10, 200, 150, 25);
         balance.addActionListener(this);
