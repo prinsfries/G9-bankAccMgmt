@@ -177,10 +177,10 @@ public class withdraw extends JFrame implements ActionListener {
     }
 
     private void throwbalance() {//kuha balance
-        String query = "SELECT bank_Amount FROM bank WHERE user_Pin = ?";
+        String query = "SELECT bank_Amount FROM bank WHERE user_num = ?";
         try {
             PreparedStatement preparedStatement = c.prepareStatement(query);
-            preparedStatement.setString(1, p);
+            preparedStatement.setString(1, n);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 balance = resultSet.getInt("bank_Amount");
